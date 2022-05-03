@@ -6,6 +6,13 @@
 *@param:
 *@return:
 */
+void startScherm();
+
+/*
+*Uitleg
+*@param:
+*@return:
+*/
 FILE *openBMP();
 
 /*
@@ -13,20 +20,27 @@ FILE *openBMP();
 *@param:
 *@return:
 */
-unsigned char readHeader(FILE *inputBMP);
+void readHeader(FILE *inputBMP, unsigned char *header);
 
 /*
 *Uitleg
 *@param:
 *@return:
 */
-int calcHeight(unsigned char header[54]);
+void calcHeight(unsigned char *header, signed int *hoogte);
 
 /*
 *Uitleg
 *@param:
 *@return:
 */
-int calcWidth(unsigned char header[54]);
+void calcWidth(unsigned char *header, signed int *breedte);
+
+/*
+*Uitleg
+*@param:
+*@return:
+*/
+void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels);
 
 #endif
