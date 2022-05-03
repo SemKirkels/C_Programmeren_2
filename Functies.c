@@ -48,3 +48,11 @@ void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels)
 
     printf("Totaal aantal pixels: %dpx\n", *pixels);
 }
+
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *pixels)
+{
+    free(header);
+    free(hoogte);
+    free(breedte);
+    free(pixels);
+}

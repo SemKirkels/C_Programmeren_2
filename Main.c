@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
     /////////////////////
     //Memory allocation//
     /////////////////////
-    unsigned char *header = malloc(54*sizeof(unsigned char));
+    unsigned char *header = malloc(54 * sizeof(unsigned char));
     signed int *hoogte = malloc(sizeof(signed int));
     signed int *breedte = malloc(sizeof(signed int));
     signed int *pixels = malloc(sizeof(signed int));
@@ -25,6 +25,11 @@ int main(int argc, char *argv[])
     calcHeight(header, hoogte); //Berekend hoogte BMP file
     calcWidth(header, breedte); //Berekend breedte BMP file
     calcPixels(hoogte, breedte, pixels);
+
+    ///////////
+    //Cleanup//
+    ///////////
+    cleanup(header, hoogte, breedte, pixels);
 
     return 0;
 }
