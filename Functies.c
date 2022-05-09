@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 
 #include "Functies.h"
 
@@ -98,8 +99,28 @@ void calcWidth(unsigned char *header, signed int *breedte) //Functie berekend de
 void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels)
 {
     *pixels = *hoogte * *breedte;
-
     printf("Totaal aantal pixels: %dpx\n", *pixels);
+}
+
+void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *pixels)
+{
+    int kleuren[*pixels];
+    fseek(inputBMP, 1, SEEK_CUR);
+    fread(kleuren, 1, *pixels, inputBMP);
+    
+    for(int i = 0; i < *pixels; i++) //TEMP
+    {
+        int counter = i % 3;
+        if(counter == 0)
+        {
+            printf("\n");
+        }
+        else
+        {
+            printf("\t%d", i);
+            printf("%x", pixels[i]);
+        }
+    }
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *pixels)

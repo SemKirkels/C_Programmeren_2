@@ -55,6 +55,14 @@ void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels);
 
 
 /*
+*Uitleg
+*@param:
+*@return
+*/
+void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *pixels);
+
+
+/*
 *Maakt maakt het geheugen dat eerder gealloceerd is vrij.
 *@param: unsigned char *header
 *@param: signed int *hoogte

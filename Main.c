@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <unistd.h>
 
 #include "Functies.h"
 
@@ -24,7 +25,8 @@ int main(int argc, char *argv[])
     readHeader(inputBMP, header); //Leest de header
     calcHeight(header, hoogte); //Berekend hoogte BMP file
     calcWidth(header, breedte); //Berekend breedte BMP file
-    calcPixels(hoogte, breedte, pixels);
+    calcPixels(hoogte, breedte, pixels); //Berekend het totaal aantal pixels
+    readImage(inputBMP, hoogte, breedte, pixels); //Leest het aantal pixels in
 
     ///////////
     //Cleanup//
