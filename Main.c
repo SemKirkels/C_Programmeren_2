@@ -11,27 +11,28 @@ int main(int argc, char *argv[])
     /////////////////////
     //Memory allocation//
     /////////////////////
-    unsigned char *header = malloc(54 * sizeof(unsigned char));
-    signed int *hoogte = malloc(sizeof(signed int));
-    signed int *breedte = malloc(sizeof(signed int));
-    signed int *pixels = malloc(sizeof(signed int));
+    unsigned char *header = (unsigned char *) malloc(54 * sizeof(unsigned char));
+    signed int *hoogte = (signed int *) malloc(sizeof(signed int));
+    signed int *breedte = (signed int *) malloc(sizeof(signed int));
+    signed int *aantalPixels = (signed int *) malloc(sizeof(signed int));
+    unsigned char *pixels = (unsigned char *) malloc(sizeof(char) * (*aantalPixels) * 3);
 
-    ////////////
-    //Functies//
-    ////////////
-    system("cls");
-    startScherm();
+    /////////////
+    //Execution//
+    /////////////
+    //system("cls");
+    //startScherm();
     FILE *inputBMP = openBMP(); //Opent BMP file
     readHeader(inputBMP, header); //Leest de header
     calcHeight(header, hoogte); //Berekend hoogte BMP file
     calcWidth(header, breedte); //Berekend breedte BMP file
-    calcPixels(hoogte, breedte, pixels); //Berekend het totaal aantal pixels
-    readImage(inputBMP, hoogte, breedte, pixels); //Leest het aantal pixels in
+    calcPixels(hoogte, breedte, aantalPixels); //Berekend het totaal aantal pixels
+    readImage(inputBMP, hoogte, breedte, aantalPixels, pixels); //Leest de kleurcomponenten in
 
     ///////////
     //Cleanup//
     ///////////
-    cleanup(header, hoogte, breedte, pixels);
+    cleanup(header, hoogte, breedte, aantalPixels, pixels);
 
     return 0;
 }

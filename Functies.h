@@ -51,7 +51,7 @@ void calcWidth(unsigned char *header, signed int *breedte);
 *@param: signed int *pixels (Hier wordt het totaal aantal pixels in opgeslagen.)
 *@return: Geen
 */
-void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels);
+void calcPixels(signed int *hoogte, signed int *breedte, signed int *aantalPixels);
 
 
 /*
@@ -59,7 +59,7 @@ void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels);
 *@param:
 *@return
 */
-void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *pixels);
+void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels);
 
 
 /*
@@ -70,6 +70,6 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
 *@param: signed int *pixels
 *@return: geen
 */
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *pixels);
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *kleuren);
 
 #endif

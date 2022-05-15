@@ -6,7 +6,7 @@
 
 #include "Functies.h"
 
-#define BMPINPUT "Test.bmp" //Bestandsnaam
+#define BMPINPUT "Test2.bmp" //Bestandsnaam
 
 void startScherm()
 {
@@ -20,7 +20,6 @@ void startScherm()
     sleep(2);
     system("cls");
                                                                                                                                                                                         
- 
     printf("\t                                   _    _         _          \n");             
     printf("\t                                  | |  | |       | |\n");
     printf("\t   __ _  ___ _ __ ___   __ _  __ _| | _| |_    __| | ___   ___  _ __\n");      
@@ -42,8 +41,7 @@ void startScherm()
                                                                          
     sleep(2);
     system("cls");                                                                     
-                                                                         
-                                                                   
+                                                                                                                                   
     printf("\t  ___ _ __ \n");                                                              
     printf("\t / _ \\ '_ \\ \n");                                                             
     printf("\t|  __/ | | | \n");                                                            
@@ -51,8 +49,7 @@ void startScherm()
 
     sleep(2);
     system("cls");
-                                                                         
-                                                          
+                                                                                                                           
     printf("\t   _      _ _ \n");                                                           
     printf("\t  (_)    | | | \n");                                                          
     printf("\t   _  ___| | | ___    ___   ___ _   _  ___ _ __  \n");                        
@@ -96,37 +93,33 @@ void calcWidth(unsigned char *header, signed int *breedte) //Functie berekend de
     printf("Breedte: %dpx\n", *breedte);
 }
 
-void calcPixels(signed int *hoogte, signed int *breedte, signed int *pixels)
+void calcPixels(signed int *hoogte, signed int *breedte, signed int *aantalPixels)
 {
-    *pixels = *hoogte * *breedte;
-    printf("Totaal aantal pixels: %dpx\n", *pixels);
+    *aantalPixels = *hoogte * *breedte;
+    printf("Totaal aantal pixels: %dpx\n", *aantalPixels);
 }
 
-void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *pixels)
+void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels)
 {
-    int kleuren[*pixels];
-    fseek(inputBMP, 1, SEEK_CUR);
-    fread(kleuren, 1, *pixels, inputBMP);
-    
-    for(int i = 0; i < *pixels; i++) //TEMP
+    int kleurComponenten = 3 * (*aantalPixels);
+
+    fread(pixels, 1, kleurComponenten, inputBMP); //3 * *pixels -> elke pixel bestaat uit 3 kleur componenten
+
+    for(int i = 0; i < kleurComponenten; i++)
     {
-        int counter = i % 3;
-        if(counter == 0)
+        printf("%d: %x ", i, pixels[i]);
+        if(i % 3 == 0)
         {
             printf("\n");
-        }
-        else
-        {
-            printf("\t%d", i);
-            printf("%x", pixels[i]);
         }
     }
 }
 
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *pixels)
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels)
 {
     free(header);
     free(hoogte);
     free(breedte);
+    free(aantalPixels);
     free(pixels);
 }
