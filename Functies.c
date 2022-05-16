@@ -6,7 +6,7 @@
 
 #include "Functies.h"
 
-#define BMPINPUT "Test2.bmp" //Bestandsnaam
+#define BMPINPUT "Test.bmp" //Bestandsnaam
 
 void startScherm()
 {
@@ -113,6 +113,69 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
             printf("\n");
         }
     }
+}
+
+void chooseFilter()
+{
+    int keuze = 0;
+    char confirmExit;
+
+    /*
+    *While loop fungeert als een FSM
+    *De loop wacht op input en keert terug als het programma is doorlopen.
+    */
+
+    while(1) 
+    {
+        printf("\n");
+        printf("1. Blur filter.\n");
+        printf("2. Zwart-wit filter.\n");
+        printf("3. Exit\n");
+        printf("Kies een filter: ");
+        scanf("%d", &keuze);
+
+        if(keuze == 1)
+        {
+            zwartWitFilter();
+        }
+        else if(keuze == 2)
+        {
+            zwartWitFilter();
+        }
+        else if(keuze == 3)
+        {
+            printf("Weet u zeker dat u het programma wil verlaten [y/n]? ");
+            scanf(" %c", &confirmExit);
+
+            if(confirmExit == 'y' || confirmExit == 'Y')
+            {
+                exit(0);
+            }
+            else if(confirmExit == 'n' || confirmExit == 'N')
+            {
+                //Doe niets
+            }
+            else
+            {
+                printf("Ongeldige input!\n");
+                //Doe niets
+            }
+        }
+        else
+        {
+            //Doe niets
+        }
+    }
+}
+
+void blurFilter()
+{
+    printf("Blur filter\n");
+}
+
+void zwartWitFilter()
+{
+    printf("Zwart wit filter\n");
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels)

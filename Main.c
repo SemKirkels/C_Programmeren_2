@@ -17,9 +17,9 @@ int main(int argc, char *argv[])
     signed int *aantalPixels = (signed int *) malloc(sizeof(signed int));
     unsigned char *pixels = (unsigned char *) malloc(sizeof(char) * (*aantalPixels) * 3);
 
-    /////////////
-    //Execution//
-    /////////////
+    ///////////////
+    //Preparation//
+    ///////////////
     //system("cls");
     //startScherm();
     FILE *inputBMP = openBMP(); //Opent BMP file
@@ -28,6 +28,11 @@ int main(int argc, char *argv[])
     calcWidth(header, breedte); //Berekend breedte BMP file
     calcPixels(hoogte, breedte, aantalPixels); //Berekend het totaal aantal pixels
     readImage(inputBMP, hoogte, breedte, aantalPixels, pixels); //Leest de kleurcomponenten in
+
+    /////////////
+    //Execution//
+    /////////////
+    chooseFilter();
 
     ///////////
     //Cleanup//

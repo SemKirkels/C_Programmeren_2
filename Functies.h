@@ -63,6 +63,29 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
 
 
 /*
+*Laat de gebruiker een filter kiezen.
+*@param: int keuze (Hier in wordt de keuze van de gebruiker in opgeslagen en het bijbehorende programma uitgevoerd)
+*@return: Geen
+*/
+void chooseFilter();
+
+
+/*
+*
+*@param
+*@return
+*/
+void blurFilter();
+
+
+/*
+*
+*@param
+*@return
+*/
+void zwartWitFilter();
+
+/*
 *Maakt maakt het geheugen dat eerder gealloceerd is vrij.
 *@param: unsigned char *header
 *@param: signed int *hoogte
