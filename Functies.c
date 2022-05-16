@@ -76,6 +76,18 @@ FILE *openBMP() //Functie opent de afbeelding
     return inputBMP;
 }
 
+FILE *openTargetBMP() //Functie opent de target afbeelding
+{
+    FILE *targetBMP = fopen("FilterBMP.bmp", "w");
+
+    if(targetBMP == NULL)
+    {
+        printf("%s\n", "Error: Unable to create the file!\n");
+        exit(-1);
+    }
+    return targetBMP;
+}
+
 void readHeader(FILE *inputBMP, unsigned char *header)
 {
     fread(header, 1, 54, inputBMP); //Zet de eerste 54 bites van inputBMP in de header.
@@ -115,7 +127,7 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     }
 }
 
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
 {
     int keuze = 0;
     char confirmExit;
@@ -137,7 +149,7 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         if(keuze == 1)
         {
             printf("Blur filter\n");
-            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels);
+            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
         }
         else if(keuze == 2)
         {
@@ -171,7 +183,7 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
     }
 }
 
-void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
 {
     /* 
     | tempPixelTL | tempPixelT  | tempPixelTR |
@@ -179,7 +191,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     | tempPixelBL | tempPixelB  | tempPixelBR |
     */
     int newPixel;
-    int  targetPixel;
+    int targetPixel;
     int tempPixelTL;  //TL    top left
     int tempPixelT;   //T     top
     int tempPixelTR;  //TR    top right 
@@ -190,9 +202,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     int tempPixelBR;  //BR    bottom right
 
     /*
-    ////////
-    //Test//
-    ////////
+    *Controle: Zijn de variabele goed doorgegeven?
     printf("%x \t", pixels[0]);
     printf("%x \t", filterPixels[0]);
     printf("%d \t", *hoogte);
@@ -206,32 +216,40 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     //////////////////
     targetPixel = pixels[0];
     tempPixelR  = pixels[0 + 3];
-    tempPixelT  = pixels[0 + (3 * (*breedte))];
-    tempPixelTL = pixels[0 + (3 * (*breedte) + 3)];
+    tempPixelT  = pixels[0 + (3 * (*breedte))]; //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn.
+    tempPixelTL = pixels[0 + (3 * (*breedte) + 3)]; //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn, +3 Om een pixel op te schuiven
 
+    /*
+    *Controle: Zijn de waarden van de kleuren goed doorgegeven?
+    printf("%d\t", targetPixel);
+    printf("%d\t", tempPixelR);
+    printf("%d\t", tempPixelT);
+    printf("%d\n", tempPixelTL);
+    */
     newPixel = (targetPixel + tempPixelR + tempPixelT + tempPixelTL) / 4;
-
-    printf("%d", newPixel);
+    printf("%x", newPixel);
+    fprintf(targetBMP, "%x", newPixel);
 }
 
 void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
 {
-    ////////
-    //Test//
-    ////////
+    /*
+    *Controle: Zijn de variabele goed doorgegeven?
     printf("%x \t", pixels[0]);
     printf("%x \t", filterPixels[0]);
     printf("%d \t", *hoogte);
     printf("%d \t", *breedte);
     printf("%d \t", *aantalPixels);
     printf("\n");
+    */
 }
 
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels)
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels)
 {
     free(header);
     free(hoogte);
     free(breedte);
     free(aantalPixels);
     free(pixels);
+    free(filterPixels);
 }

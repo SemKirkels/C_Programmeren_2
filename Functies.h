@@ -18,6 +18,14 @@ FILE *openBMP();
 
 
 /*
+*Functie opent de targetBMP
+*@param: Geen
+*@return: FILE *inputBMP
+*/
+FILE *openTargetBMP();
+
+
+/*
 *Leest de eerste 54 bytes in van de BMP afbeelding.
 *@param: FILE *inputBMP 
 *@param: unsigned char *header (In de header worden de eerste 54 bytes van de afbeelding opgeslagen.)
@@ -67,23 +75,24 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
 *@param: int keuze (Hier in wordt de keuze van de gebruiker in opgeslagen en het bijbehorende programma uitgevoerd)
 *@return: Geen
 */
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
 
 
 /*
 *
-*@param
-*@return
+*@param: 
+*@return: 
 */
-void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
 
 
 /*
 *
-*@param
-*@return
+*@param: 
+*@return: 
 */
 void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
+
 
 /*
 *Maakt maakt het geheugen dat eerder gealloceerd is vrij.
@@ -93,6 +102,6 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
 *@param: signed int *pixels
 *@return: geen
 */
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *kleuren);
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels);
 
 #endif
