@@ -115,7 +115,7 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     }
 }
 
-void chooseFilter()
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
 {
     int keuze = 0;
     char confirmExit;
@@ -136,11 +136,13 @@ void chooseFilter()
 
         if(keuze == 1)
         {
-            zwartWitFilter();
+            printf("Blur filter\n");
+            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels);
         }
         else if(keuze == 2)
         {
-            zwartWitFilter();
+            printf("Zwart wit filter\n");
+            zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels);
         }
         else if(keuze == 3)
         {
@@ -163,19 +165,66 @@ void chooseFilter()
         }
         else
         {
+            printf("Ongeldige input\n");
             //Doe niets
         }
     }
 }
 
-void blurFilter()
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
 {
-    printf("Blur filter\n");
+    /* 
+    | tempPixelTL | tempPixelT  | tempPixelTR |
+    | tempPixelL  | targetPixel | tempPixelR  |
+    | tempPixelBL | tempPixelB  | tempPixelBR |
+    */
+    int newPixel;
+    int  targetPixel;
+    int tempPixelTL;  //TL    top left
+    int tempPixelT;   //T     top
+    int tempPixelTR;  //TR    top right 
+    int tempPixelL;   //L     left
+    int tempPixelR;   //R     right
+    int tempPixelBL;  //BL    bottom left
+    int tempPixelB;   //B     bottom 
+    int tempPixelBR;  //BR    bottom right
+
+    /*
+    ////////
+    //Test//
+    ////////
+    printf("%x \t", pixels[0]);
+    printf("%x \t", filterPixels[0]);
+    printf("%d \t", *hoogte);
+    printf("%d \t", *breedte);
+    printf("%d \t", *aantalPixels);
+    printf("\n");
+    */
+
+    //////////////////
+    //Execution blue//
+    //////////////////
+    targetPixel = pixels[0];
+    tempPixelR  = pixels[0 + 3];
+    tempPixelT  = pixels[0 + (3 * (*breedte))];
+    tempPixelTL = pixels[0 + (3 * (*breedte) + 3)];
+
+    newPixel = (targetPixel + tempPixelR + tempPixelT + tempPixelTL) / 4;
+
+    printf("%d", newPixel);
 }
 
-void zwartWitFilter()
+void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
 {
-    printf("Zwart wit filter\n");
+    ////////
+    //Test//
+    ////////
+    printf("%x \t", pixels[0]);
+    printf("%x \t", filterPixels[0]);
+    printf("%d \t", *hoogte);
+    printf("%d \t", *breedte);
+    printf("%d \t", *aantalPixels);
+    printf("\n");
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels)

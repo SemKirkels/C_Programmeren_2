@@ -67,7 +67,7 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
 *@param: int keuze (Hier in wordt de keuze van de gebruiker in opgeslagen en het bijbehorende programma uitgevoerd)
 *@return: Geen
 */
-void chooseFilter();
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
 
 
 /*
@@ -75,7 +75,7 @@ void chooseFilter();
 *@param
 *@return
 */
-void blurFilter();
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
 
 
 /*
@@ -83,7 +83,7 @@ void blurFilter();
 *@param
 *@return
 */
-void zwartWitFilter();
+void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels);
 
 /*
 *Maakt maakt het geheugen dat eerder gealloceerd is vrij.

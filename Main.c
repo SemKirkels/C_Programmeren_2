@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     signed int *breedte = (signed int *) malloc(sizeof(signed int));
     signed int *aantalPixels = (signed int *) malloc(sizeof(signed int));
     unsigned char *pixels = (unsigned char *) malloc(sizeof(char) * (*aantalPixels) * 3);
+    unsigned char *filterPixels = (unsigned char *) malloc(sizeof(char) * (*aantalPixels) * 3);
 
     ///////////////
     //Preparation//
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
     /////////////
     //Execution//
     /////////////
-    chooseFilter();
+    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels);
 
     ///////////
     //Cleanup//
