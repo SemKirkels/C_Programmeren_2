@@ -88,9 +88,11 @@ FILE *openTargetBMP() //Functie opent de target afbeelding
     return targetBMP;
 }
 
-void readHeader(FILE *inputBMP, unsigned char *header)
+void readHeader(FILE *inputBMP, unsigned char *header, FILE *targetBMP)
 {
     fread(header, 1, 54, inputBMP); //Zet de eerste 54 bites van inputBMP in de header.
+
+    fwrite(header, 1, 54, targetBMP); //Schrijft de header weg in targetBMP
 }
 
 void calcHeight(unsigned char *header, signed int *hoogte) //Functie berekend de hoogte van de afbeelding
@@ -127,7 +129,7 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     }
 }
 
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
 {
     int keuze = 0;
     char confirmExit;
@@ -149,12 +151,12 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         if(keuze == 1)
         {
             printf("Blur filter\n");
-            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
         }
         else if(keuze == 2)
         {
             printf("Zwart wit filter\n");
-            zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels);
+            zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
         }
         else if(keuze == 3)
         {
@@ -183,14 +185,13 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
     }
 }
 
-void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
 {
     /* 
     | tempPixelTL | tempPixelT  | tempPixelTR |
     | tempPixelL  | targetPixel | tempPixelR  |
     | tempPixelBL | tempPixelB  | tempPixelBR |
     */
-    int newPixel;
     int targetPixel;
     int tempPixelTL;  //TL    top left
     int tempPixelT;   //T     top
@@ -200,6 +201,8 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     int tempPixelBL;  //BL    bottom left
     int tempPixelB;   //B     bottom 
     int tempPixelBR;  //BR    bottom right
+    int kleurComponent = 0; //Kleurcomponent -> 0 = Blauw -> 1 = Groen -> 2 = Rood
+    int currentPixel = 0;   //Huidige pixel
 
     /*
     *Controle: Zijn de variabele goed doorgegeven?
@@ -210,15 +213,58 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     printf("%d \t", *aantalPixels);
     printf("\n");
     */
+ 
+    ///////////////////
+    //Execution row 1//
+    ///////////////////
+    while(currentPixel < *aantalPixels)
+    {
+        if(currentPixel == 0)                                             //Berekend pixel links onder
+        {
+            targetPixel = pixels[kleurComponent];
+            tempPixelR  = pixels[kleurComponent + 3];
+            tempPixelT  = pixels[kleurComponent + (3 * (*breedte))];      //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn.
+            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) + 3)];  //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn, +3 Om een pixel op te schuiven
+            filterPixels[currentPixel + kleurComponent] = (targetPixel + tempPixelR + tempPixelT + tempPixelTL) / 4;
+            printf("%x", newPixel);
+        }
+        else if(currentPixel > 0 && kleurComponent < *breedte)            //Berekend pixels in het midden onder
+        {
+            targetPixel = pixels[kleurComponent];                         //Target pixel
+            tempPixelL  = pixels[kleurComponent - 3];                     //Pixel links van target
+            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) - 3)];  //Pixel links boven van target
+            tempPixelT  = pixels[kleurComponent + (3 * (*breedte))];      //Pixel boven target
+            tempPixelTR = pixels[kleurComponent + (3 * (*breedte) + 3)];  //Pixel rechts boven van target
+            tempPixelR  = pixels[kleurComponent + 3];                     //Pixel rechts van target
+            newPixel = (targetPixel + tempPixelL + tempPixelTL + tempPixelT + tempPixelTR + tempPixelR) / 6;
+            printf("%x", newPixel);
+        }
+        else if(currentPixel == *breedte)                                 //Berekend pixels rechts onder
+        {
+            targetPixel = pixels[kleurComponent];                         //Target pixel
+            tempPixelL  = pixels[kleurComponent - 3];                     //Pixel links van target
+            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) - 3)];  //Pixel links boven van target
+            tempPixelT  = pixels[kleurComponent + (*breedte)];            //Pixel boven target
+            newPixel = (targetPixel + tempPixelL + tempPixelTL + tempPixelT) / 4;
+            fprintf(targetBMP, "%x", newPixel);
+            printf("%x", newPixel);
+        }
+        else
+        {
+            
+        }
 
-    //////////////////
-    //Execution blue//
-    //////////////////
-    targetPixel = pixels[0];
-    tempPixelR  = pixels[0 + 3];
-    tempPixelT  = pixels[0 + (3 * (*breedte))]; //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn.
-    tempPixelTL = pixels[0 + (3 * (*breedte) + 3)]; //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn, +3 Om een pixel op te schuiven
-
+        kleurComponent++;
+        /*
+        *Wanneer 1 pixel volledig is gefilterd wordt de currentPixel met 1 verhoogd en gaat het programma door naar de volgende pixel
+        */
+        if(kleurComponent == 2)
+        {
+            currentPixel++;
+            kleurComponent = 0;
+        }
+    }
+    fwrite(filterPixels, 1, 54)
     /*
     *Controle: Zijn de waarden van de kleuren goed doorgegeven?
     printf("%d\t", targetPixel);
@@ -226,12 +272,9 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     printf("%d\t", tempPixelT);
     printf("%d\n", tempPixelTL);
     */
-    newPixel = (targetPixel + tempPixelR + tempPixelT + tempPixelTL) / 4;
-    printf("%x", newPixel);
-    fprintf(targetBMP, "%x", newPixel);
 }
 
-void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels)
+void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
 {
     /*
     *Controle: Zijn de variabele goed doorgegeven?
@@ -244,7 +287,7 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
     */
 }
 
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels)
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP, unsigned char *filterPixels)
 {
     free(header);
     free(hoogte);
@@ -252,4 +295,7 @@ void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, sig
     free(aantalPixels);
     free(pixels);
     free(filterPixels);
+
+    fclose(inputBMP);
+    fclose(targetBMP);
 }

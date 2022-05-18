@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     //startScherm();
     FILE *inputBMP = openBMP(); //Opent BMP file
     FILE *targetBMP = openTargetBMP(); //Opent de BMP Target file
-    readHeader(inputBMP, header); //Leest de header
+    readHeader(inputBMP, header, targetBMP); //Leest de header
     calcHeight(header, hoogte); //Berekend hoogte BMP file
     calcWidth(header, breedte); //Berekend breedte BMP file
     calcPixels(hoogte, breedte, aantalPixels); //Berekend het totaal aantal pixels
@@ -34,12 +34,12 @@ int main(int argc, char *argv[])
     /////////////
     //Execution//
     /////////////
-    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
 
     ///////////
     //Cleanup//
     ///////////
-    cleanup(header, hoogte, breedte, aantalPixels, pixels, filterPixels);
+    cleanup(header, hoogte, breedte, aantalPixels, pixels, filterPixels, inputBMP, targetBMP, filterPixels);
 
     return 0;
 }

@@ -12,8 +12,7 @@ int main()
     printf(" \t\\__ \\__,_|\\__,_|_|\\_\\ |___/\\___|_| |_| |_|\\___||___/\\__\\___|_|    \\_____/ \n");      
 
     sleep(2);
-    system("cls");
-                                                                                                                                                                                        
+    system("cls");                                                                                                                                                                                   
  
     printf("\t                                   _    _         _          \n");             
     printf("\t                                  | |  | |       | |\n");
@@ -35,8 +34,7 @@ int main()
     printf("\t\\____/ \\___|_| |_| |_| \\_| \\_/_|_|  |_|\\_\\___|_|___/  \n");                   
                                                                          
     sleep(2);
-    system("cls");                                                                     
-                                                                         
+    system("cls");                                                                                                                                     
                                                                    
     printf("\t  ___ _ __ \n");                                                              
     printf("\t / _ \\ '_ \\ \n");                                                             
@@ -44,8 +42,7 @@ int main()
     printf("\t \\___|_| |_| \n");    
 
     sleep(2);
-    system("cls");
-                                                                         
+    system("cls");                                                                   
                                                           
     printf("\t   _      _ _ \n");                                                           
     printf("\t  (_)    | | | \n");                                                          
