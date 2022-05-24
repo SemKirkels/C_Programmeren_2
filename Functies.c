@@ -6,8 +6,8 @@
 
 #include "Functies.h"
 
-#define BMPINPUT "Test.bmp" //Bestandsnaam
-#define BMPOUTPUT "FilterBMP.bmp"
+#define BMPINPUT "64x32.bmp" //Bestandsnaam
+#define BMPOUTPUT "FilterBMP.bmp" //Bestandsnaam Target File
 
 void startScherm()
 {
@@ -313,9 +313,9 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
                 tempPixelBR = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte + 3)];
             }
             newPixel = (targetPixel + tempPixelTL + tempPixelT + tempPixelTR + tempPixelL + tempPixelR + tempPixelBL + tempPixelB + tempPixelBR) / 9;
-            printf("%x\n", newPixel); //Test
+            //printf("%x\n", newPixel); //Test
             filterPixels[counter] = newPixel;
-            printf("%x\n", filterPixels[counter]); //Test
+            //printf("%x\n", filterPixels[counter]); //Test
             counter++;
         }
     }
