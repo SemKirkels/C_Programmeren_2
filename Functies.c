@@ -7,6 +7,7 @@
 #include "Functies.h"
 
 #define BMPINPUT "Test.bmp" //Bestandsnaam
+#define BMPOUTPUT "FilterBMP.bmp"
 
 void startScherm()
 {
@@ -78,7 +79,7 @@ FILE *openBMP() //Functie opent de afbeelding
 
 FILE *openTargetBMP() //Functie opent de target afbeelding
 {
-    FILE *targetBMP = fopen("FilterBMP.bmp", "w");
+    FILE *targetBMP = fopen(BMPOUTPUT, "w");
 
     if(targetBMP == NULL)
     {
@@ -118,7 +119,6 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     int kleurComponenten = 3 * (*aantalPixels);
 
     fread(pixels, 1, kleurComponenten, inputBMP); //3 * *pixels -> elke pixel bestaat uit 3 kleur componenten
-
     for(int i = 0; i < kleurComponenten; i++)
     {
         printf("%d: %x ", i, pixels[i]);
@@ -129,7 +129,7 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     }
 }
 
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
 {
     int keuze = 0;
     char confirmExit;
@@ -151,12 +151,12 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         if(keuze == 1)
         {
             printf("Blur filter\n");
-            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
+            blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
         }
         else if(keuze == 2)
         {
             printf("Zwart wit filter\n");
-            zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
+            zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
         }
         else if(keuze == 3)
         {
@@ -185,96 +185,145 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
     }
 }
 
-void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
 {
+     /*
+    *Controle: Zijn de variabele goed doorgegeven?
+    printf("%x \t", pixels[0]);
+    printf("%x \t", filterPixels[0]);
+    printf("%d \t", *hoogte);
+    printf("%d \t", *breedte);
+    printf("%d \t", *aantalPixels);
+    printf("\n");
+    */
+    
     /* 
     | tempPixelTL | tempPixelT  | tempPixelTR |
     | tempPixelL  | targetPixel | tempPixelR  |
     | tempPixelBL | tempPixelB  | tempPixelBR |
     */
-    int targetPixel;
-    int tempPixelTL;  //TL    top left
-    int tempPixelT;   //T     top
-    int tempPixelTR;  //TR    top right 
-    int tempPixelL;   //L     left
-    int tempPixelR;   //R     right
-    int tempPixelBL;  //BL    bottom left
-    int tempPixelB;   //B     bottom 
-    int tempPixelBR;  //BR    bottom right
-    int kleurComponent = 0; //Kleurcomponent -> 0 = Blauw -> 1 = Groen -> 2 = Rood
-    int currentPixel = 0;   //Huidige pixel
-
-    /*
-    *Controle: Zijn de variabele goed doorgegeven?
-    printf("%x \t", pixels[0]);
-    printf("%x \t", filterPixels[0]);
-    printf("%d \t", *hoogte);
-    printf("%d \t", *breedte);
-    printf("%d \t", *aantalPixels);
-    printf("\n");
-    */
+    int newPixel;
+    int targetPixel;  //      Target pixel           (y * (*breedte) * 3) + (3 * x)
+    int tempPixelTL;  //TL    top left               (y * (*breedte) * 3) + (3 * x) + (*breedte - 3)
+    int tempPixelT;   //T     top                    (y * (*breedte) * 3) + (3 * x) + (*breedte)
+    int tempPixelTR;  //TR    top right              (y * (*breedte) * 3) + (3 * x) + (*breedte + 3)
+    int tempPixelL;   //L     left                   (y * (*breedte) * 3) + (3 * x) - 3
+    int tempPixelR;   //R     right                  (y * (*breedte) * 3) + (3 * x) + 3
+    int tempPixelBL;  //BL    bottom left            (y * (*breedte) * 3) + (3 * x) - (*breedte - 3)
+    int tempPixelB;   //B     bottom                 (y * (*breedte) * 3) + (3 * x) - *breedte
+    int tempPixelBR;  //BR    bottom right           (y * (*breedte) * 3) + (3 * x) - (*breedte + 3)
+    int counter = 0;  //Telt waar de cursor in de target bmp is
+    int offset = 54;  //Offset voor het schrijven in de target bmp
  
-    ///////////////////
-    //Execution row 1//
-    ///////////////////
-    while(currentPixel < *aantalPixels)
+    /////////////
+    //Execution//
+    /////////////
+    for(int y = 0; y < *hoogte; y++)
     {
-        if(currentPixel == 0)                                             //Berekend pixel links onder
+        for(int x = 0; x < 3 * (*breedte); x++)
         {
-            targetPixel = pixels[kleurComponent];
-            tempPixelR  = pixels[kleurComponent + 3];
-            tempPixelT  = pixels[kleurComponent + (3 * (*breedte))];      //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn.
-            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) + 3)];  //"3 * (*breedte)" omdat er steeds 3 kleurcomponenten per pixel zijn, +3 Om een pixel op te schuiven
-            filterPixels[currentPixel + kleurComponent] = (targetPixel + tempPixelR + tempPixelT + tempPixelTL) / 4;
-            printf("%x", newPixel);
-        }
-        else if(currentPixel > 0 && kleurComponent < *breedte)            //Berekend pixels in het midden onder
-        {
-            targetPixel = pixels[kleurComponent];                         //Target pixel
-            tempPixelL  = pixels[kleurComponent - 3];                     //Pixel links van target
-            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) - 3)];  //Pixel links boven van target
-            tempPixelT  = pixels[kleurComponent + (3 * (*breedte))];      //Pixel boven target
-            tempPixelTR = pixels[kleurComponent + (3 * (*breedte) + 3)];  //Pixel rechts boven van target
-            tempPixelR  = pixels[kleurComponent + 3];                     //Pixel rechts van target
-            newPixel = (targetPixel + tempPixelL + tempPixelTL + tempPixelT + tempPixelTR + tempPixelR) / 6;
-            printf("%x", newPixel);
-        }
-        else if(currentPixel == *breedte)                                 //Berekend pixels rechts onder
-        {
-            targetPixel = pixels[kleurComponent];                         //Target pixel
-            tempPixelL  = pixels[kleurComponent - 3];                     //Pixel links van target
-            tempPixelTL = pixels[kleurComponent + (3 * (*breedte) - 3)];  //Pixel links boven van target
-            tempPixelT  = pixels[kleurComponent + (*breedte)];            //Pixel boven target
-            newPixel = (targetPixel + tempPixelL + tempPixelTL + tempPixelT) / 4;
-            fprintf(targetBMP, "%x", newPixel);
-            printf("%x", newPixel);
-        }
-        else
-        {
-            
-        }
-
-        kleurComponent++;
-        /*
-        *Wanneer 1 pixel volledig is gefilterd wordt de currentPixel met 1 verhoogd en gaat het programma door naar de volgende pixel
-        */
-        if(kleurComponent == 2)
-        {
-            currentPixel++;
-            kleurComponent = 0;
+            if((x - 3) < 0)                                 //pixel linkerzijkant
+            {
+                if((y - 1) < 0)                             //pixel links onder
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte)];
+                    tempPixelB  = 0;
+                    tempPixelTL = 0;
+                    tempPixelL  = 0;
+                    tempPixelBL = 0;
+                    tempPixelTR = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte + 3)];
+                    tempPixelR  = pixels[(y * (*breedte) * 3) + (3 * x) + 3];
+                    tempPixelBR = 0;
+                }
+                else if((y + 1) > *breedte)                 //pixel links boven
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = 0;
+                    tempPixelB  = pixels[(y * (*breedte) * 3) + (3 * x) - *breedte];
+                    tempPixelTL = 0;
+                    tempPixelL  = 0;
+                    tempPixelBL = 0;
+                    tempPixelTR = 0;
+                    tempPixelR  = pixels[(y * (*breedte) * 3) + (3 * x) + 3];
+                    tempPixelBR = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte + 3)];
+                }
+                else                                        //pixel linkerzijkant
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte)];
+                    tempPixelB  = pixels[(y * (*breedte) * 3) + (3 * x) - *breedte];
+                    tempPixelTL = 0;
+                    tempPixelL  = 0;
+                    tempPixelBL = 0;
+                    tempPixelTR = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte + 3)];
+                    tempPixelR  = pixels[(y * (*breedte) * 3) + (3 * x) + 3];
+                    tempPixelBR = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte + 3)];
+                }
+            }
+            else if((x - 3) > *breedte)                     //pixel rechterzijkant
+            {
+                if((y - 1) < 0)                             //pixel rechts onder
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte)];
+                    tempPixelB  = 0;
+                    tempPixelTL = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte - 3)];
+                    tempPixelL  = pixels[(y * (*breedte) * 3) + (3 * x) - 3];
+                    tempPixelBL = 0;
+                    tempPixelTR = 0;
+                    tempPixelR  = 0;
+                    tempPixelBR = 0;
+                }
+                else if((y + 1) > *breedte)                //pixel rechts boven
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = 0;
+                    tempPixelB  = pixels[(y * (*breedte) * 3) + (3 * x) - *breedte];
+                    tempPixelTL = 0;
+                    tempPixelL  = pixels[(y * (*breedte) * 3) + (3 * x) - 3];
+                    tempPixelBL = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte - 3)];
+                    tempPixelTR = 0;
+                    tempPixelR  = 0;
+                    tempPixelBR = 0;
+                }
+                else                                        //pixel rechterzijkant
+                {
+                    targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                    tempPixelT  = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte)];
+                    tempPixelB  = pixels[(y * (*breedte) * 3) + (3 * x) - *breedte];
+                    tempPixelTL = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte - 3)];
+                    tempPixelL  = pixels[(y * (*breedte) * 3) + (3 * x) - 3];
+                    tempPixelBL = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte - 3)];
+                    tempPixelTR = 0;
+                    tempPixelR  = 0;
+                    tempPixelBR = 0;
+                }
+            }
+            else            
+            {
+                targetPixel = pixels[(y * (*breedte) * 3) + (3 * x)];
+                tempPixelT  = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte)];
+                tempPixelB  = pixels[(y * (*breedte) * 3) + (3 * x) - *breedte];
+                tempPixelTL = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte - 3)];
+                tempPixelL  = pixels[(y * (*breedte) * 3) + (3 * x) - 3];
+                tempPixelBL = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte - 3)];
+                tempPixelTR = pixels[(y * (*breedte) * 3) + (3 * x) + (*breedte + 3)];
+                tempPixelR  = pixels[(y * (*breedte) * 3) + (3 * x) + 3];
+                tempPixelBR = pixels[(y * (*breedte) * 3) + (3 * x) - (*breedte + 3)];
+            }
+            newPixel = (targetPixel + tempPixelTL + tempPixelT + tempPixelTR + tempPixelL + tempPixelR + tempPixelBL + tempPixelB + tempPixelBR) / 9;
+            printf("%x\n", newPixel); //Test
+            filterPixels[counter] = newPixel;
+            printf("%x\n", filterPixels[counter]); //Test
+            counter++;
         }
     }
-    fwrite(filterPixels, 1, 54)
-    /*
-    *Controle: Zijn de waarden van de kleuren goed doorgegeven?
-    printf("%d\t", targetPixel);
-    printf("%d\t", tempPixelR);
-    printf("%d\t", tempPixelT);
-    printf("%d\n", tempPixelTL);
-    */
+    fseek(targetBMP, (offset), SEEK_SET);
+    fwrite(filterPixels, 1, 3 * (*aantalPixels), targetBMP);
 }
 
-void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels)
+void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
 {
     /*
     *Controle: Zijn de variabele goed doorgegeven?
@@ -287,7 +336,7 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
     */
 }
 
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP, unsigned char *filterPixels)
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP)
 {
     free(header);
     free(hoogte);

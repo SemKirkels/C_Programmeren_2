@@ -83,7 +83,7 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
 *@param: 
 *@return: 
 */
-void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels);
+void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
 
 
 /*
@@ -91,7 +91,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
 *@param: 
 *@return: 
 */
-void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, unsigned char *filterPixels);
+void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
 
 
 /*
@@ -102,6 +102,6 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
 *@param: signed int *pixels
 *@return: geen
 */
-void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP, unsigned char *filterPixels);
+void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP);
 
 #endif

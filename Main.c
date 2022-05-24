@@ -34,12 +34,12 @@ int main(int argc, char *argv[])
     /////////////
     //Execution//
     /////////////
-    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, filterPixels);
+    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
 
     ///////////
     //Cleanup//
     ///////////
-    cleanup(header, hoogte, breedte, aantalPixels, pixels, filterPixels, inputBMP, targetBMP, filterPixels);
+    cleanup(header, hoogte, breedte, aantalPixels, pixels, filterPixels, inputBMP, targetBMP);
 
     return 0;
 }
