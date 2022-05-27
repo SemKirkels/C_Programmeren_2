@@ -6,8 +6,8 @@
 
 #include "Functies.h"
 
-#define BMPINPUT "Test3.bmp" //Bestandsnaam
-#define BMPOUTPUT "FilterBMP.bmp" //Bestandsnaam Target File
+#define BMPINPUT "Input/Test7.bmp" //Bestandsnaam
+#define BMPOUTPUT "Output/FilterBMP.bmp" //Bestandsnaam Target File
 
 void startScherm()
 {
@@ -205,15 +205,15 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     | tempPixelBL | tempPixelB  | tempPixelBR |
     */
     unsigned char newPixel;
-    unsigned char targetPixel;  //      Target pixel           (y * (*breedte) * 3) + (3 * x)
-    unsigned char tempPixelTL;  //TL    top left               (y * (*breedte) * 3) + (3 * x) + ((3 * (*breedte)) - 3)
-    unsigned char tempPixelT;   //T     top                    (y * (*breedte) * 3) + (3 * x) + (3 * (*breedte))
-    unsigned char tempPixelTR;  //TR    top right              (y * (*breedte) * 3) + (3 * x) + ((3 * (*breedte)) + 3)
-    unsigned char tempPixelL;   //L     left                   (y * (*breedte) * 3) + (3 * x) - 3
-    unsigned char tempPixelR;   //R     right                  (y * (*breedte) * 3) + (3 * x) + 3
-    unsigned char tempPixelBL;  //BL    bottom left            (y * (*breedte) * 3) + (3 * x) - ((3 * (*breedte)) - 3)
-    unsigned char tempPixelB;   //B     bottom                 (y * (*breedte) * 3) + (3 * x) - (3 * (*breedte))
-    unsigned char tempPixelBR;  //BR    bottom right           (y * (*breedte) * 3) + (3 * x) - ((3 * (*breedte)) + 3)
+    unsigned char targetPixel;  //      Target pixel           (y * (*breedte) * 3) + (x)
+    unsigned char tempPixelTL;  //TL    top left               (y * (*breedte) * 3) + (x) + ((3 * (*breedte)) - 3)
+    unsigned char tempPixelT;   //T     top                    (y * (*breedte) * 3) + (x) + (3 * (*breedte))
+    unsigned char tempPixelTR;  //TR    top right              (y * (*breedte) * 3) + (x) + ((3 * (*breedte)) + 3)
+    unsigned char tempPixelL;   //L     left                   (y * (*breedte) * 3) + (x) - 3
+    unsigned char tempPixelR;   //R     right                  (y * (*breedte) * 3) + (x) + 3
+    unsigned char tempPixelBL;  //BL    bottom left            (y * (*breedte) * 3) + (x) - ((3 * (*breedte)) - 3)
+    unsigned char tempPixelB;   //B     bottom                 (y * (*breedte) * 3) + (x) - (3 * (*breedte))
+    unsigned char tempPixelBR;  //BR    bottom right           (y * (*breedte) * 3) + (x) - ((3 * (*breedte)) + 3)
     int counter = 0;  //Telt waar de cursor in de target bmp is
     int offset = 54;  //Offset voor het schrijven in de target bmp
  
@@ -236,6 +236,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
     for(int y = 0; y < *hoogte; y++)
     {
         printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
+        
         for(int x = 0; x < (3 * (*breedte)); x++)
         {
             if((x - 3) < 0)                                 //pixel linkerzijkant
