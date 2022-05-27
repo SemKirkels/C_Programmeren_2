@@ -6,8 +6,10 @@
 
 #include "Functies.h"
 
+/*
 #define BMPINPUT "Input/Test7.bmp" //Bestandsnaam
 #define BMPOUTPUT "Output/FilterBMP.bmp" //Bestandsnaam Target File
+*/
 
 void startScherm()
 {
@@ -66,6 +68,11 @@ void startScherm()
 
 FILE *openBMP() //Functie opent de afbeelding
 {
+    char BMPINPUT[100]="";
+
+    printf("Kies een bestand: ");
+    scanf("%s",&BMPINPUT);
+    
     FILE *inputBMP = fopen(BMPINPUT, "rb");
 
     if(inputBMP == NULL)
@@ -79,6 +86,11 @@ FILE *openBMP() //Functie opent de afbeelding
 
 FILE *openTargetBMP() //Functie opent de target afbeelding
 {
+    char BMPOUTPUT[100]="";
+
+    printf("Naam ouput file: ");
+    scanf("%s", BMPOUTPUT);
+    
     FILE *targetBMP = fopen(BMPOUTPUT, "wb");
 
     if(targetBMP == NULL)
