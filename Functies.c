@@ -290,7 +290,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
                     tempPixelBR = pixels[(y * ((*breedte) * 3)) + (x) - ((3 * (*breedte)) + 3)];
                 }
             }
-            else if((x + 3) > 3 * (*breedte))               //pixel rechterzijkant
+            else if((x + 3) > ((3 * (*breedte)) - 1))               //pixel rechterzijkant
             {
                 if((y - 1) < 0)                             //pixel rechts onder
                 {
@@ -399,6 +399,61 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
     printf("%d \t", *aantalPixels);
     printf("\n");
     */
+
+   unsigned char newPixel;
+   unsigned char targetPixelB;  //Target pixel blauw (y * (*breedte) * 3) + (x + blauw)
+   unsigned char targetPixelG;  //Target pixel groen (y * (*breedte) * 3) + (x + groen)
+   unsigned char targetPixelR;  //Target pixel rood (y * (*breedte) * 3) + (x + rood)
+   int blauw = 0;
+   int groen = 1;
+   int rood = 2;
+   int counter = 0;             //Telt waar de cursor in de target bmp is.
+   int offset = 54;             //Offset voor het schrijven in target bmp. (voorkomt overschrijven van de header)
+
+   /////////////
+   //Execution//
+   /////////////
+   /*
+   for(int x = 0; x < (3 * (*aantalPixel)); x++)
+   {
+       printf("%d ", pixels[x]);
+       if(x % (3 * (*breedte)) == 0 && x != 0)
+       {
+           printf("\n");
+       }
+   }
+   */
+
+    printf("\n");
+
+    for(int y = 0; y < *hoogte; y++)
+    {
+        printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
+        for(int x = 0; x < (3 * (*breedte)); x += 3)
+        {
+            targetPixelB = pixels[(y * ((*breedte) * 3)) + (x + blauw)];
+            targetPixelG = pixels[(y * ((*breedte) * 3)) + (x + groen)];
+            targetPixelR = pixels[(y * ((*breedte) * 3)) + (x + rood)];
+            newPixel = (targetPixelB + targetPixelG + targetPixelR) / 3;
+            filterPixels[counter + blauw] = newPixel;
+            filterPixels[counter + groen] = newPixel;
+            filterPixels[counter + rood] = newPixel;
+            counter += 3;
+        }
+    }
+    /*
+    for(int x = 0; x < (3 * (*aantalPixels)); x++)
+    {
+        printf("%d ", filterPixels[x]);
+        if(x % (3 * (*breedte)) == 0 && x != 0)
+        {
+            printf("\n");
+        }
+    }
+    */
+
+   fseek(targetBMP, (offset), SEEK_SET);
+   fwrite(filterPixels, 1, (3 * (*aantalPixels)), targetBMP);
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP)
