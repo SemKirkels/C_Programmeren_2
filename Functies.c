@@ -158,7 +158,8 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         printf("\n");
         printf("1. Blur filter.\n");
         printf("2. Zwart-wit filter.\n");
-        printf("3. Exit\n");
+        printf("3. Negatief filter\n");
+        printf("4. Exit\n");
         printf("Kies een filter: ");
         scanf("%d", &keuze);
 
@@ -173,6 +174,10 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
             zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
         }
         else if(keuze == 3)
+        {
+            printf("Negatief filter\n");
+        }
+        else if(keuze == 4)
         {
             printf("Weet u zeker dat u het programma wil verlaten [y/n]? ");
             scanf(" %c", &confirmExit);
