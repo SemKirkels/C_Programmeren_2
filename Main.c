@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     /////////////
     //Execution//
     /////////////
-    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, inputBMP, header);
 
     ///////////
     //Cleanup//

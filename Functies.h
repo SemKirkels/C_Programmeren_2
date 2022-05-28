@@ -84,9 +84,11 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
 *@param: signed int *breedte
 *@param: signed int *aantalPixels
 *@param: FILE *targetBMP
+*@param: FILE *inputBMP
+*@param: unsigned char *header
 *@return: Geen
 */
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, FILE *inputBMP, unsigned char *header);
 
 
 /*

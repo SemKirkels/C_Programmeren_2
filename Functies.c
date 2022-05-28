@@ -71,7 +71,7 @@ FILE *openBMP() //Functie opent de afbeelding
     char BMPINPUT[100]="";
 
     printf("Kies een bestand: ");
-    scanf("%s",&BMPINPUT);
+    scanf("%s", BMPINPUT);
     
     FILE *inputBMP = fopen(BMPINPUT, "rb");
 
@@ -111,7 +111,7 @@ void readHeader(FILE *inputBMP, unsigned char *header, FILE *targetBMP)
 void calcHeight(unsigned char *header, signed int *hoogte) //Functie berekend de hoogte van de afbeelding
 {
     *hoogte = header[25] << 24 | header[24] << 16 | header[23] << 8 | header[22]; //Resultaat: hoogte = (8 bits header[21]) (8 bits header[20]) (8 bits header[19]) (8 bits header[18])
-    printf("Hoogte: %dpx\n", *hoogte);
+    printf("\nHoogte: %dpx\n", *hoogte);
 }
 
 void calcWidth(unsigned char *header, signed int *breedte) //Functie berekend de breedte van de afbeelding
@@ -143,10 +143,51 @@ void readImage(FILE *inputBMP, signed int *hoogte, signed int *breedte, signed i
     */
 }
 
-void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
+void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP, FILE *inputBMP, unsigned char *header)
 {
     int keuze = 0;
     char confirmExit;
+
+    /*
+    Er wordt eerst gecontrolleerd of dat de afbeelding de juiste resolutie heeft.
+    Als de lengte of breedte van de afbeelding niet deelbaar is door 4 wordt gebruiker gevraagd of dat de lege doel afbeelding verwijderd moet worden.
+    */
+
+    if((*breedte % 4) != 0 || (*hoogte % 4) != 0 )
+    {
+        char *fileName = (char *) malloc(sizeof(char));
+        char confirmDelete;
+
+        printf("\n");
+        printf("De afbeelding wordt niet ondersteunt!\n");
+        printf("Het opruimen wordt gestart\n");
+        cleanup(header, hoogte, breedte, aantalPixels, pixels, filterPixels, inputBMP, targetBMP);
+        
+        while(1)
+        {
+            printf("\n");
+            printf("Het doelbestand kan beschadigd of leeg zijn.\n");
+            printf("Wilt u het doelbestand verwijderen [y/n]?\n");
+            scanf(" %c", &confirmDelete);
+            if(confirmDelete == 'y' || confirmDelete == 'Y')
+            {
+                printf("Geef de bestandsnaam van het te verwijderen bestand op: ");
+                scanf("%s", fileName);
+                remove(fileName);
+                break;
+            }
+            else if(confirmDelete == 'n' || confirmDelete == 'N')
+            {
+                break;
+            }
+            else
+            {
+                printf("Ongeldige invoer!\n");
+            }
+        }
+
+        exit(-2);
+    }
 
     /*
     *While loop fungeert als een FSM
@@ -155,6 +196,11 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
 
     while(1) 
     {
+        /*
+        De gebruiker wordt gevraagd welke filter hij wil gebruiken.
+        Daarna wordt de functie van de bijbehorende filter gestart
+        */
+       
         printf("\n");
         printf("1. Blur filter.\n");
         printf("2. Zwart-wit filter.\n");
@@ -252,7 +298,7 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
 
     for(int y = 0; y < *hoogte; y++)
     {
-        printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
+        //printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
         
         for(int x = 0; x < (3 * (*breedte)); x++)
         {
@@ -433,7 +479,8 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
 
     for(int y = 0; y < *hoogte; y++)
     {
-        printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
+        //printf("Pixel offset = %d\t y = %d\n", (y * ((*breedte) * 3)), y);
+        
         for(int x = 0; x < (3 * (*breedte)); x += 3)
         {
             targetPixelB = pixels[(y * ((*breedte) * 3)) + (x + blauw)];
