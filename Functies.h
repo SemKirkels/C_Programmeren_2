@@ -171,6 +171,14 @@ void negatieffilter(unsigned char *pixels, unsigned char *filterPixels, signed i
 
 
 /*
+*print de closer van de negatief filter
+*@param: geen
+*@return: geen
+*/
+void negatiefcloser();
+
+
+/*
 *Maakt maakt het geheugen dat eerder gealloceerd is vrij en sluit de afbeeldingen.
 *@param: unsigned char *header
 *@param: signed int *hoogte

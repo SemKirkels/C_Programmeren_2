@@ -230,6 +230,7 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         {
             printf("Negatief filter\n");
             negatieffilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+            negatiefcloser();
         }
         else if(keuze == 4)
         {
@@ -578,6 +579,35 @@ printf("\t | | | | | ||  __/ |    | ||  __/ | (_| |  __/ |_) | |  | |_| | |   < 
 printf("\t |_| |_|_|\\__\\___|_|     \\__\\___|  \\__, |\\___|_.__/|_|   \\__,_|_|_|\\_\\___|_| |_|        \n");                                            
 printf("\t                                    __/ |                                                                   \n");                        
 printf("\t                                   |___/                                                                           \n");                 
+}
+
+void negatiefcloser()
+{    
+printf("\t _              _             _    _                                 _  \n");     
+printf("\t| |            | |           | |  | |                               | |      \n");
+printf("\t| |__   ___  __| | __ _ _ __ | | _| |_  __   _____   ___  _ __    __| | ___  \n");
+printf("\t| '_ \\ / _ \\/ _` |/ _` | '_ \\| |/ / __| \\ \\ / / _ \\ / _ \\| '__|  / _` |/ _ \\ \n");
+printf("\t| |_) |  __/ (_| | (_| | | | |   <| |_   \\ V / (_) | (_) | |    | (_| |  __/ \n");
+printf("\t|_.__/ \\___|\\__,_|\\__,_|_| |_|_|\\_\\__|    \\_/ \\___/ \\___/|_|     \\__,_|\\___| \n");
+                                                                             
+                                                                             
+printf("\t                        _   _       __    __ _ _ _              _            \n");
+printf("\t                       | | (_)     / _|  / _(_) | |            | |           \n");
+printf("\t _ __   ___  __ _  __ _| |_ _  ___| |_  | |_ _| | |_ ___ _ __  | |_ ___      \n");
+printf("\t| '_ \\ / _ \\/ _` |/ _` | __| |/ _ \\  _| |  _| | | __/ _ \\ '__| | __/ _ \\     \n");
+printf("\t| | | |  __/ (_| | (_| | |_| |  __/ |   | | | | | ||  __/ |    | ||  __/     \n");
+printf("\t|_| |_|\\___|\\__, |\\__,_|\\__|_|\\___|_|   |_| |_|_|\\__\\___|_|     \\__\\___|     \n");
+printf("\t             __/ |                                                           \n");
+printf("\t            |___/                                                            \n");
+printf("\t            _                _ _                                             \n");
+printf("\t           | |              (_) |                                            \n");
+printf("\t  __ _  ___| |__  _ __ _   _ _| | _____ _ __                                 \n");
+printf("\t / _` |/ _ \\ '_ \\| '__| | | | | |/ / _ \\ '_ \\                                \n");
+printf("\t| (_| |  __/ |_) | |  | |_| | |   <  __/ | | |                               \n");
+printf("\t \\__, |\\___|_.__/|_|   \\__,_|_|_|\\_\\___|_| |_|                               \n");
+printf("\t  __/ |                                                                      \n");
+printf("\t |___/                                                                       \n");
+
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP)
