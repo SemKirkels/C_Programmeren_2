@@ -68,38 +68,41 @@ void startScherm()
 
 FILE *openBMP() //Functie opent de afbeelding
 {
-    char BMPINPUT[255]="";
+    char *fileNameInput = (char *) malloc(255 *sizeof(char));
 
     printf("Kies een bestand: ");
-    scanf("%s", BMPINPUT);
+    scanf("%s", fileNameInput);
     
-    FILE *inputBMP = fopen(BMPINPUT, "rb");
+    FILE *inputBMP = fopen(fileNameInput, "rb");
 
     if(inputBMP == NULL)
     {
         printf("%s\n", "Error: Unable to open the file!\n");
         sleep(1);
+        free(fileNameInput);
         exit(-1);
     }
-
+    free(fileNameInput);
     return inputBMP;
 }
 
 FILE *openTargetBMP() //Functie opent de target afbeelding
 {
-    char BMPOUTPUT[255]="";
+    char *fileNameTarget = (char *) malloc(255 *sizeof(char));
 
     printf("Naam ouput file: ");
-    scanf("%s", BMPOUTPUT);
+    scanf("%s", fileNameTarget);
     
-    FILE *targetBMP = fopen(BMPOUTPUT, "wb");
+    FILE *targetBMP = fopen(fileNameTarget, "wb");
 
     if(targetBMP == NULL)
     {
         printf("%s\n", "Error: Unable to create the file!\n");
         sleep(1);
+        free(fileNameTarget);
         exit(-1);
     }
+    free(fileNameTarget);
     return targetBMP;
 }
 
@@ -187,6 +190,7 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
                 printf("Ongeldige invoer!\n");
             }
         }
+        free(fileName);
         exit(-2);
     }
 
@@ -574,7 +578,6 @@ printf("\t | | | | | ||  __/ |    | ||  __/ | (_| |  __/ |_) | |  | |_| | |   < 
 printf("\t |_| |_|_|\\__\\___|_|     \\__\\___|  \\__, |\\___|_.__/|_|   \\__,_|_|_|\\_\\___|_| |_|        \n");                                            
 printf("\t                                    __/ |                                                                   \n");                        
 printf("\t                                   |___/                                                                           \n");                 
-    
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP)
