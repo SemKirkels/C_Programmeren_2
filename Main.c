@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     //Preparation//
     ///////////////
     system("cls");
-    startScherm();
+    //startScherm();
     FILE *inputBMP = openBMP(); //Opent BMP file
     FILE *targetBMP = openTargetBMP(); //Opent de BMP Target file
     readHeader(inputBMP, header, targetBMP); //Leest de header

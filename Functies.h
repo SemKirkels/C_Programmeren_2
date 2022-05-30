@@ -117,6 +117,14 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
 
 
 /*
+*Print de closer van de blurfilter.
+*@param: geen
+*@return: geen
+*/
+void closersmoother();
+
+
+/*
 *Telt de waarde van elke kleur in elke pixel op en deelt deze door 3. Deze waarde wordt opgeslagen in de 3 kleurcomponenten per pixel. De afbeelding wordt zwartwit.
 *@param: unsigned char *pixels
 *@param: unsigned char *filterPixels
@@ -135,6 +143,31 @@ void blurFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *
 *@return: Geen
 */
 void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
+
+
+/*
+*print de closer van de zwartwitfunctie
+*@param: geen
+*@return: geen
+*/
+void zwartwitcloser();
+
+
+/*
+*De huidige waarde van pixel wordt afgetrokken van 255.
+*@param: unsigned char *pixels
+*@param: unsigned char *filterPixels
+*@param: signed int *hoogte
+*@param: signed int *breedte
+*@param: signed int *aantalPixels
+*@param: FILE *targetBMP
+*@param: unsigned char newPixel (geinverteerde waarde van de pixel)
+*@param: unsigned char pixel (huidige pixel)
+*@param: int counter (houdt bij waar je bent gebleven in filterPixels)
+*@param: int offset (zorgt dat je header niet overschrijft)
+*@return: geen
+*/
+void negatieffilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP);
 
 
 /*

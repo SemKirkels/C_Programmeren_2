@@ -68,7 +68,7 @@ void startScherm()
 
 FILE *openBMP() //Functie opent de afbeelding
 {
-    char BMPINPUT[100]="";
+    char BMPINPUT[255]="";
 
     printf("Kies een bestand: ");
     scanf("%s", BMPINPUT);
@@ -87,7 +87,7 @@ FILE *openBMP() //Functie opent de afbeelding
 
 FILE *openTargetBMP() //Functie opent de target afbeelding
 {
-    char BMPOUTPUT[100]="";
+    char BMPOUTPUT[255]="";
 
     printf("Naam ouput file: ");
     scanf("%s", BMPOUTPUT);
@@ -214,15 +214,18 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
         {
             printf("Blur filter\n");
             blurFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+            closersmoother();
         }
         else if(keuze == 2)
         {
             printf("Zwart wit filter\n");
             zwartWitFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+            zwartwitcloser();
         }
         else if(keuze == 3)
         {
             printf("Negatief filter\n");
+            negatieffilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
         }
         else if(keuze == 4)
         {
@@ -507,6 +510,71 @@ void zwartWitFilter(unsigned char *pixels, unsigned char *filterPixels, signed i
 
    fseek(targetBMP, (offset), SEEK_SET);
    fwrite(filterPixels, 1, (3 * (*aantalPixels)), targetBMP);
+}
+
+void negatieffilter(unsigned char *pixels, unsigned char *filterPixels, signed int *hoogte, signed int *breedte, signed int *aantalPixels, FILE *targetBMP)
+{
+    unsigned char newPixel;
+    unsigned char pixel;
+    int counter = 0;
+    int offset =54;
+
+    printf("\n");
+
+    for(int y = 0; y < *hoogte; y++)
+    {
+        for(int x = 0; x <(3 * (*breedte)); x ++)
+        {
+           pixel = pixels[(y * ((*breedte) * 3)) + (x)];
+           newPixel = 255-pixel;
+           filterPixels[counter] =newPixel;
+           counter++; 
+
+        }
+    }
+    fseek(targetBMP, (offset), SEEK_SET);
+    fwrite(filterPixels,1, (3 * (*aantalPixels)), targetBMP);
+}
+
+void closersmoother()
+{
+printf("\t   ______          _             _    _                                 _        _                       \n");       
+printf("\t   | ___ \\        | |           | |  | |                               | |      (_)                           \n");  
+printf("\t   | |_/ / ___  __| | __ _ _ __ | | _| |_  __   _____   ___  _ __    __| | ___   _ _ __ ___   __ _  __ _  ___ \n");  
+printf("\t   | ___ \\/ _ \\/ _` |/ _` | '_ \\| |/ / __| \\ \\ / / _ \\ / _ \\| '__|  / _` |/ _ \\ | | '_ ` _ \\ / _` |/ _` |/ _ \\   ");  
+printf("\t   | |_/ /  __/ (_| | (_| | | | |   <| |_   \\ V / (_) | (_) | |    | (_| |  __/ | | | | | | | (_| | (_| |  __/\n");  
+printf("\t   \\____/ \\___|\\__,_|\\__,_|_| |_|_|\\_\\__|    \\_/ \\___/ \\___/|_|     \\__,_|\\___| |_|_| |_| |_|\\__,_|\\__, |\\___|   ");  
+printf("\t                                                                                                    __/ |     \n");  
+printf("\t                                                                                                   |___/      \n");  
+printf("\t                              _   _                  _                    _                _ _                \n");  
+printf("\t                             | | | |                | |                  | |              (_) |               \n");  
+printf("\t    ___ _ __ ___   ___   ___ | |_| |__   ___ _ __   | |_ ___    __ _  ___| |__  _ __ _   _ _| | _____ _ __    \n");  
+printf("\t   / __| '_ ` _ \\ / _ \\ / _ \\| __| '_ \\ / _ \\ '__|  | __/ _ \\  / _` |/ _ \\ '_ \\| '__| | | | | |/ / _ \\ '_ \\   \n");  
+printf("\t   \\__ \\ | | | | | (_) | (_) | |_| | | |  __/ |     | ||  __/ | (_| |  __/ |_) | |  | |_| | |   <  __/ | | |  \n");  
+printf("\t   |___/_| |_| |_|\\___/ \\___/ \\__|_| |_|\\___|_|      \\__\\___|  \\__, |\\___|_.__/|_|   \\__,_|_|_|\\_\\___|_| |_|  \n");  
+printf("\t                                                                __/ |                                         \n");  
+printf("\t                                                               |___/                                          \n");  
+}
+
+void zwartwitcloser()
+{
+printf("\t______          _             _    _                                 _                                _                       _ _   \n");
+printf("\t| ___ \\        | |           | |  | |                               | |                              | |                     (_) |  \n");
+printf("\t| |_/ / ___  __| | __ _ _ __ | | _| |_  __   _____   ___  _ __    __| | ___   ______      ____ _ _ __| |_   ______  __      ___| |_ \n");
+printf("\t| ___ \\/ _ \\/ _` |/ _` | '_ \\| |/ / __| \\ \\ / / _ \\ / _ \\| '__|  / _` |/ _ \\ |_  /\\ \\ /\\ / / _` | '__| __| |______| \\ \\ /\\ / / | __| \n");
+printf("\t| |_/ /  __/ (_| | (_| | | | |   <| |_   \\ V / (_) | (_) | |    | (_| |  __/  / /  \\ V  V / (_| | |  | |_            \\ V  V /| | |_  \n");
+printf("\t\\____/ \\___|\\__,_|\\__,_|_| |_|_| \\_\\__|   \\_/ \\___/ \\___/|_|     \\__,_|\\___| /___|  \\_/\\_/ \\__,_|_|   \\__|            \\_/\\_/ |_|\\__| \n");
+                                                                                                                                    
+                                                                                                                                    
+printf("\t   __ _ _ _              _                    _                _ _                      \n");                                            
+printf("\t  / _(_) | |            | |                  | |              (_) |            \n");                                                     
+printf("\t | |_ _| | |_ ___ _ __  | |_ ___    __ _  ___| |__  _ __ _   _ _| | _____ _ __      \n");                                                
+printf("\t |  _| | | __/ _ \\ '__| | __/ _ \\  / _` |/ _ \\ '_ \\| '__| | | | | |/ / _ \\ '_ \\       \n");                                              
+printf("\t | | | | | ||  __/ |    | ||  __/ | (_| |  __/ |_) | |  | |_| | |   <  __/ | | |  \n");                                                  
+printf("\t |_| |_|_|\\__\\___|_|     \\__\\___|  \\__, |\\___|_.__/|_|   \\__,_|_|_|\\_\\___|_| |_|        \n");                                            
+printf("\t                                    __/ |                                                                   \n");                        
+printf("\t                                   |___/                                                                           \n");                 
+    
 }
 
 void cleanup(unsigned char *header, signed int *hoogte, signed int *breedte, signed int *aantalPixels, unsigned char *pixels, unsigned char *filterPixels, FILE *inputBMP, FILE *targetBMP)
