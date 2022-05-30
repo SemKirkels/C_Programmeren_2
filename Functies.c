@@ -78,6 +78,7 @@ FILE *openBMP() //Functie opent de afbeelding
     if(inputBMP == NULL)
     {
         printf("%s\n", "Error: Unable to open the file!\n");
+        sleep(1);
         exit(-1);
     }
 
@@ -96,6 +97,7 @@ FILE *openTargetBMP() //Functie opent de target afbeelding
     if(targetBMP == NULL)
     {
         printf("%s\n", "Error: Unable to create the file!\n");
+        sleep(1);
         exit(-1);
     }
     return targetBMP;
@@ -185,7 +187,6 @@ void chooseFilter(unsigned char *pixels, unsigned char *filterPixels, signed int
                 printf("Ongeldige invoer!\n");
             }
         }
-
         exit(-2);
     }
 
