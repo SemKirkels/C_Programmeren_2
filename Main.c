@@ -21,8 +21,9 @@ int main(int argc, char *argv[])
     ///////////////
     //Preparation//
     ///////////////
-    //system("cls");
-    //startScherm();
+    system("mode con: cols=175 lines=45");
+    system("cls");
+    startScherm();
     FILE *inputBMP = openBMP(); //Opent BMP file
     FILE *targetBMP = openTargetBMP(); //Opent de BMP Target file
     readHeader(inputBMP, header, targetBMP); //Leest de header
@@ -34,7 +35,7 @@ int main(int argc, char *argv[])
     /////////////
     //Execution//
     /////////////
-    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP);
+    chooseFilter(pixels, filterPixels, hoogte, breedte, aantalPixels, targetBMP, inputBMP, header);
 
     ///////////
     //Cleanup//
